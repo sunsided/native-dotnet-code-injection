@@ -5,9 +5,7 @@
 
 using namespace std;
 
-#define BUFSIZE 4096 //!< maximum length of the DLL path
-
-static const LPCSTR bootstrapDllName = "Bootstrapper.dll";
+static const LPCWSTR bootstrapDllName = L"Bootstrapper.dll";
 
 void SetDebugPrivilege() 
 {
@@ -54,7 +52,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	SetDebugPrivilege();
 
 	// fetch the process ID
-	const DWORD procID = 3692;
+	const DWORD procID = 10592;
 
 	// get a handle to the running process
 	auto hProcess = OpenProcess( PROCESS_CREATE_THREAD | 
@@ -70,9 +68,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	// get the full path to the bootstrap DLL
-	static CHAR dllPath[BUFSIZE] = "";
-	auto length = GetFullPathNameA(bootstrapDllName, 
-									BUFSIZE, 
+	static TCHAR dllPath[MAX_PATH] = L"";
+	auto length = GetFullPathNameW(bootstrapDllName, 
+									MAX_PATH, 
 									dllPath, //Output to save the full DLL path
 									NULL);
 	if(length == 0) 
@@ -91,9 +89,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	// allocate memory for the DLL path in the remote process
 	auto dllPathAddr = VirtualAllocEx(hProcess, 
                              0, 
-                             sizeof(CHAR)*strlen(dllPath)+1,
+                             sizeof(dllPath),
                              MEM_RESERVE|MEM_COMMIT, 
-                             PAGE_READWRITE);
+                             PAGE_EXECUTE_READWRITE);
 	if(dllPathAddr == NULL) 
 	{
 		cerr << "Error: the memory could not be allocated inside the chosen process." << endl;
@@ -103,7 +101,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	auto n = WriteProcessMemory(hProcess, 
                    dllPathAddr, 
                    dllPath, 
-                   sizeof(CHAR)*strlen(dllPath)+1,
+                   sizeof(dllPath),
                    NULL);
 	if(n == 0) 
 	{
@@ -111,12 +109,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	// testing success
-	static CHAR testBuffer[BUFSIZE] = "";
+	static CHAR testBuffer[MAX_PATH] = "";
 	SIZE_T bytesRead;
 	n = ReadProcessMemory(hProcess, 
                    dllPathAddr, 
                    testBuffer, 
-                   sizeof(CHAR)*strlen(dllPath)+1,
+                   sizeof(testBuffer),
                    &bytesRead);
 	if(n == 0) 
 	{
@@ -124,10 +122,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	// determine the starting address of LoadLibraryA (same for all processes)
-	auto loadLibAddr = GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "LoadLibraryA");
+	auto loadLibAddr = GetProcAddress(GetModuleHandle(TEXT("Kernel32")), "LoadLibraryW");
 	if(loadLibAddr == NULL) 
 	{
-		cerr << "Error: the LoadLibraryA function was not found inside kernel32.dll library." << endl;
+		cerr << "Error: the LoadLibrary[A/W] function was not found inside kernel32.dll library." << endl;
 	}
 
 	// execute LoadLibraryA in the remote process and pass the pointer to the DLL path
