@@ -4,8 +4,6 @@
 #include "stdafx.h"
 #include <stdio.h>
 
-#include "MSCorEE.h"
-
 static const LPCWSTR assemblyPath = L"D:\\dev\\Projekte\\various\\Code Injection\\CodeInject\\bin\\Release\\CodeInject.exe";
 static const LPCWSTR classFqn = L"CodeInject.SomeClass";
 static const LPCWSTR methodName = L"SomeMethod";
@@ -23,43 +21,83 @@ void StartTheDotNetRuntime()
 	fprintf(file, "binding runtime.\r\n");
 	fflush(file);
 
-    // Bind to the CLR runtime..
-    ICLRRuntimeHost *pClrHost = NULL;
-    HRESULT hr = CorBindToRuntimeEx(
-        NULL, L"wks", 0, CLSID_CLRRuntimeHost,
-        IID_ICLRRuntimeHost, (PVOID*)&pClrHost);
-
-#if 1
-
-	fprintf(file, "starting runtime.\r\n");
+    fprintf(file, "Loading the .NET runtime host.\n");
+	fflush(file);
+      
+	ICLRMetaHost *pMetaHost = NULL;
+	auto result = CLRCreateInstance(CLSID_CLRMetaHost, IID_PPV_ARGS(&pMetaHost));
+	if (FAILED(result))
+	{
+		fprintf(file, "Error: failed to create CLR instance.\n");
+		fflush(file);
+		
+		return;
+	}
+ 
+	fprintf(file, "Loading the .NET runtime.\n");
 	fflush(file);
 
-    // Push the big START button shown above
-    hr = pClrHost->Start();
+	ICLRRuntimeInfo *pRuntimeInfo = NULL;
+	result = pMetaHost->GetRuntime(L"v4.0.30319", IID_PPV_ARGS(&pRuntimeInfo));
+	if (FAILED(result))
+	{
+		fprintf(file, "Error: failed to create CLR instance.\n");
+		fflush(file);
 
-	fprintf(file, "executing remote code.\r\n");
+		pMetaHost->Release();
+		return;
+	}
+ 
+	fprintf(file, "Acquiring the .NET runtime.\n");
 	fflush(file);
 
-    // Okay, the CLR is up and running in this (previously native) process.
-    // Now call a method on our managed C# class library.
+	ICLRRuntimeHost *pClrRuntimeHost = NULL;
+	result = pRuntimeInfo->GetInterface(CLSID_CLRRuntimeHost, IID_PPV_ARGS(&pClrRuntimeHost));
+	if (FAILED(result))
+	{
+		fprintf(file, "Error: failed to acquire CLR runtime.\n");
+		fflush(file);
+
+		pMetaHost->Release();
+		return;
+	}
+
+	fprintf(file, "Starting the .NET runtime.\n");
+	fflush(file);
+
+	result = pClrRuntimeHost->Start();
+	if (FAILED(result))
+	{
+		fprintf(file, "Error: failed to start CLR runtime.\n");
+		fflush(file);
+
+		pClrRuntimeHost->Release();
+		pMetaHost->Release();
+		return;
+	}
+
+	fprintf(file, "Executing payload assembly.\n");
+	fflush(file);
     DWORD dwRet = 0;
-    hr = pClrHost->ExecuteInDefaultAppDomain(
-        assemblyPath,
-        classFqn, methodName, parameter, &dwRet);
+    result = pClrRuntimeHost->ExecuteInDefaultAppDomain(
+            assemblyPath,
+            classFqn, methodName, parameter, &dwRet);
+	if (FAILED(result))
+	{
+		fprintf(file, "Error: unable to execute example code.\n");
+		fflush(file);
+	}
 
-	fprintf(file, "stopping runtime.\r\n");
+	fprintf(file, "Stopping the .NET runtime.\n");
 	fflush(file);
 
-    // Optionally stop the CLR runtime (we could also leave it running)
-    hr = pClrHost->Stop();
+	pClrRuntimeHost->Stop();
 
-#endif
-
-	fprintf(file, "releasing runtime.\r\n");
+	fprintf(file, "Releasing the .NET runtime.\n");
 	fflush(file);
 
-    // Don’t forget to clean up.
-    pClrHost->Release();
+	pClrRuntimeHost->Release();
+	pMetaHost->Release();
 
 	fclose(file);
 }

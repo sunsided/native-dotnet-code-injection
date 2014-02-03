@@ -13,7 +13,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	wprintf(L"Loading the .NET runtime host.\n");
       
 	ICLRMetaHost *pMetaHost = NULL;
-	auto result = CLRCreateInstance(CLSID_CLRMetaHost, IID_ICLRMetaHost, (LPVOID*)&pMetaHost);
+	auto result = CLRCreateInstance(CLSID_CLRMetaHost, IID_PPV_ARGS(&pMetaHost));
 	if (FAILED(result))
 	{
 		wprintf(L"Error: failed to create CLR instance.\n");
@@ -22,7 +22,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	wprintf(L"Loading the .NET runtime.\n");
 
 	ICLRRuntimeInfo *pRuntimeInfo = NULL;
-	result = pMetaHost->GetRuntime(L"v4.0.30319", IID_ICLRRuntimeInfo, (LPVOID*)&pRuntimeInfo);
+	result = pMetaHost->GetRuntime(L"v4.0.30319", IID_PPV_ARGS(&pRuntimeInfo));
 	if (FAILED(result))
 	{
 		wprintf(L"Error: failed to create CLR instance.\n");
@@ -31,7 +31,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	wprintf(L"Acquiring the .NET runtime.\n");
 
 	ICLRRuntimeHost *pClrRuntimeHost = NULL;
-	pRuntimeInfo->GetInterface(CLSID_CLRRuntimeHost, IID_ICLRRuntimeHost, (LPVOID*)&pClrRuntimeHost);
+	pRuntimeInfo->GetInterface(CLSID_CLRRuntimeHost, IID_PPV_ARGS(&pClrRuntimeHost));
  
 	wprintf(L"Starting the .NET runtime.\n");
 	pClrRuntimeHost->Start();
@@ -48,9 +48,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	wprintf(L"Stopping the .NET runtime.\n");
 	pClrRuntimeHost->Stop();
-	pClrRuntimeHost->Release();
 
 	wprintf(L"Releasing the .NET runtime.\n");
+	pClrRuntimeHost->Release();
 	pMetaHost->Release();
 
 	return 0;

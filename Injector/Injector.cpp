@@ -52,7 +52,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	SetDebugPrivilege();
 
 	// fetch the process ID
-	const DWORD procID = 10228;
+	const DWORD procID = 6536;
 
 	// get a handle to the running process
 	auto hProcess = OpenProcess( PROCESS_CREATE_THREAD | 

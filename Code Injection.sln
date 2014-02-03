@@ -12,6 +12,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Injector", "Injector\Inject
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HostingTest", "HostingTest\HostingTest.vcxproj", "{EF9C752A-3725-4414-983E-1F1409237CCE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5C378C13-881E-4B2B-8070-BEC25F4CADEB} = {5C378C13-881E-4B2B-8070-BEC25F4CADEB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

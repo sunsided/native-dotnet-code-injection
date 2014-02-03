@@ -13,7 +13,14 @@ namespace CodeInject
         /// <remarks>http://www.codingthewheel.com/archives/how-to-inject-a-managed-assembly-dll/</remarks>
         public static int SomeMethod(String pwzArgument)
         {
-            MessageBox.Show("Hello World");
+            MessageBox.Show(
+                "I am a managed app.\n\n" +
+                "I am running inside: [" +
+                System.Diagnostics.Process.GetCurrentProcess().ProcessName +
+                "]\n\n" + (String.IsNullOrEmpty(pwzArgument)
+                    ? "I was not given an argument"
+                    : "I was given this argument: [" + pwzArgument + "]"));
+
             return 0;
         }
     }
