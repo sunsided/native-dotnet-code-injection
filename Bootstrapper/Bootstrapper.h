@@ -1,3 +1,8 @@
 #pragma once
 
-__declspec(dllexport) HRESULT StartTheDotNetRuntime(_In_ LPCTSTR lpCommand);
+extern "C"
+{
+
+	__declspec(dllexport) HRESULT __cdecl StartTheDotNetRuntime(_In_ LPCTSTR lpCommand);
+
+}

@@ -21,7 +21,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	SetDebugPrivilege();
 
 	// fetch the process ID
-	const DWORD procID = 9612;
+	const DWORD procID = 2748;
 
 	// get a handle to the running process
 	auto hProcess = OpenProcess( PROCESS_CREATE_THREAD | 
@@ -40,7 +40,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	static TCHAR dllPath[MAX_PATH] = L"";
 	auto length = GetFullPathNameW(bootstrapDllName, 
 									MAX_PATH, 
-									dllPath, //Output to save the full DLL path
+									dllPath,
 									NULL);
 	if(length == 0) 
 	{
@@ -63,6 +63,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	
 	// inject the bootstrap DLL
+	cout << "Injecting bootstrap DLL" << endl;
 	Inject(hProcess, loadLibAddr, dllPath);
 
 	// add the function offset to the base of the module in the remote process
@@ -70,8 +71,18 @@ int _tmain(int argc, _TCHAR* argv[])
     DWORD_PTR offset = GetFunctionOffset(dllPath, "StartTheDotNetRuntime");
     DWORD_PTR fnImplant = hBootstrap + offset;
 
-	// build argument; use DELIM as tokenizer
+	// build argument
+	// NOTE: This parameter can be used to communicate e.g. the name of a memory mapped file for process synchronization
     wstring argument = L"LOL";
+
+	// inject the managed assembly into the remote process
+	cout << "Injecting .NET assembly initialization call" << endl;
+    Inject(hProcess, (LPVOID)fnImplant, argument);
+
+	// unload bootstrap.dll out of the remote process
+	cout << "Removing bootstrap DLL" << endl;
+    FARPROC fnFreeLibrary = GetProcAddress(GetModuleHandle(L"Kernel32"), "FreeLibrary");
+    CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)fnFreeLibrary, (LPVOID)hBootstrap, NULL, 0);
 
 	// wait for a keypress
 	cout << "Press RETURN to continue." << endl;
@@ -187,6 +198,15 @@ DWORD_PTR GetFunctionOffset(const wstring& library, const char* functionName)
     
     // get address of function to invoke
     void* lpInject = GetProcAddress(hLoaded, functionName);
+	if (lpInject == NULL)
+	{
+		auto error = GetLastError();
+		cerr << "Error: unable to determine function offset. Code: " << hex << error << "." << endl;
+
+		// unload library from this process
+		FreeLibrary(hLoaded);
+		return 0;
+	}
     
     // compute the distance between the base address and the function to invoke
     DWORD_PTR offset = (DWORD_PTR)lpInject - (DWORD_PTR)hLoaded;

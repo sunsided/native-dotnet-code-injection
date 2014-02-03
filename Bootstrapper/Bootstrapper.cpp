@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include <stdio.h>
+#include "Bootstrapper.h"
 
 static const LPCWSTR assemblyPath = L"D:\\dev\\Projekte\\various\\Code Injection\\CodeInject\\bin\\Release\\CodeInject.exe";
 static const LPCWSTR classFqn = L"CodeInject.SomeClass";
