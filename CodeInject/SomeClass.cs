@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace CodeInject
@@ -14,13 +15,12 @@ namespace CodeInject
         public static int SomeMethod(String pwzArgument)
         {
             MessageBox.Show(
-                "I am a managed app.\n\n" +
-                "I am running inside: [" +
-                System.Diagnostics.Process.GetCurrentProcess().ProcessName +
-                "]\n\n" + (String.IsNullOrEmpty(pwzArgument)
-                    ? "I was not given an argument"
-                    : "I was given this argument: [" + pwzArgument + "]"));
-
+                "Managed application running inside: [" +
+                Process.GetCurrentProcess().ProcessName +
+                "]" + Environment.NewLine + (String.IsNullOrEmpty(pwzArgument)
+                    ? "Not given an argument"
+                    : "Given the argument: [" + pwzArgument + "]"));
+            
             return 0;
         }
     }
