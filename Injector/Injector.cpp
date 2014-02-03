@@ -52,7 +52,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	SetDebugPrivilege();
 
 	// fetch the process ID
-	const DWORD procID = 10592;
+	const DWORD procID = 10228;
 
 	// get a handle to the running process
 	auto hProcess = OpenProcess( PROCESS_CREATE_THREAD | 
@@ -122,7 +122,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	// determine the starting address of LoadLibraryA (same for all processes)
-	auto loadLibAddr = GetProcAddress(GetModuleHandle(TEXT("Kernel32")), "LoadLibraryW");
+	auto loadLibAddr = GetProcAddress(GetModuleHandleW(TEXT("Kernel32")), "LoadLibraryW");
 	if(loadLibAddr == NULL) 
 	{
 		cerr << "Error: the LoadLibrary[A/W] function was not found inside kernel32.dll library." << endl;
@@ -150,6 +150,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	// get HMODULE of the loaded dll
+#if 0 // this won't work on 64bit Windows due to result code truncation
 	DWORD   hLibModule;
 	result = GetExitCodeThread(rThread, &hLibModule);
 	if (result == STILL_ACTIVE)
@@ -161,6 +162,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		auto error = GetLastError();
 		cerr << "Error: unable to get HMODULE of injected DLL. Code: " << hex << error << "." << endl;
 	}
+#endif
 
 	// wait for a keypress
 	cout << "Press RETURN to continue." << endl;

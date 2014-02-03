@@ -16,6 +16,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	{
 	case DLL_PROCESS_ATTACH:
 		fprintf(file, "DLL attach function called.\r\n"); // should be here after injection
+		StartTheDotNetRuntime();
+		fprintf(file, "Bootstrapper called.\r\n");
 		break;
 	case DLL_THREAD_ATTACH:
 		fprintf(file, "DLL thread attach function called.\r\n");

@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Injector", "Injector\Inject
 		{8073D075-E220-4CE6-8FC3-2F8F9824B2F5} = {8073D075-E220-4CE6-8FC3-2F8F9824B2F5}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HostingTest", "HostingTest\HostingTest.vcxproj", "{EF9C752A-3725-4414-983E-1F1409237CCE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -67,6 +69,20 @@ Global
 		{833AC76A-3EB2-4D2F-ACE3-90795EAEE727}.Release|x64.ActiveCfg = Release|x64
 		{833AC76A-3EB2-4D2F-ACE3-90795EAEE727}.Release|x64.Build.0 = Release|x64
 		{833AC76A-3EB2-4D2F-ACE3-90795EAEE727}.Release|x86.ActiveCfg = Release|Win32
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Debug|Win32.Build.0 = Debug|Win32
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Debug|x64.ActiveCfg = Debug|x64
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Debug|x64.Build.0 = Debug|x64
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Debug|x86.ActiveCfg = Debug|Win32
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Release|Win32.ActiveCfg = Release|Win32
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Release|Win32.Build.0 = Release|Win32
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Release|x64.ActiveCfg = Release|x64
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Release|x64.Build.0 = Release|x64
+		{EF9C752A-3725-4414-983E-1F1409237CCE}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
