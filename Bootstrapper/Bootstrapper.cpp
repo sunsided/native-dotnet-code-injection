@@ -13,7 +13,7 @@ static const LPCWSTR parameter = L"MyParameter";
 /// Starts the dot net runtime.
 /// </summary>
 /// <remarks>http://www.codingthewheel.com/archives/how-to-inject-a-managed-assembly-dll/</remarks>
-void StartTheDotNetRuntime()
+HRESULT StartTheDotNetRuntime(_In_ LPCTSTR lpCommand)
 {
 	FILE *file;
 	fopen_s(&file, "d:\\dev\\temp2.txt", "a+");
@@ -31,7 +31,7 @@ void StartTheDotNetRuntime()
 		fprintf(file, "Error: failed to create CLR instance.\n");
 		fflush(file);
 		
-		return;
+		return result;
 	}
  
 	fprintf(file, "Loading the .NET runtime.\n");
@@ -45,7 +45,7 @@ void StartTheDotNetRuntime()
 		fflush(file);
 
 		pMetaHost->Release();
-		return;
+		return result;
 	}
  
 	fprintf(file, "Acquiring the .NET runtime.\n");
@@ -59,7 +59,7 @@ void StartTheDotNetRuntime()
 		fflush(file);
 
 		pMetaHost->Release();
-		return;
+		return result;
 	}
 
 	fprintf(file, "Starting the .NET runtime.\n");
@@ -73,7 +73,7 @@ void StartTheDotNetRuntime()
 
 		pClrRuntimeHost->Release();
 		pMetaHost->Release();
-		return;
+		return result;
 	}
 
 	fprintf(file, "Executing payload assembly.\n");
@@ -86,6 +86,11 @@ void StartTheDotNetRuntime()
 	{
 		fprintf(file, "Error: unable to execute example code.\n");
 		fflush(file);
+
+		pClrRuntimeHost->Stop();
+		pClrRuntimeHost->Release();
+		pMetaHost->Release();
+		return result;
 	}
 
 	fprintf(file, "Stopping the .NET runtime.\n");
@@ -100,4 +105,6 @@ void StartTheDotNetRuntime()
 	pMetaHost->Release();
 
 	fclose(file);
+
+	return ERROR_SUCCESS;
 }

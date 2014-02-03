@@ -15,9 +15,8 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		fprintf(file, "DLL attach function called.\r\n"); // should be here after injection
-		StartTheDotNetRuntime();
-		fprintf(file, "Bootstrapper called.\r\n");
+		fprintf(file, "DLL attach function called.\r\n");
+		 // NOTE: StartTheDotNetRuntime() cannot be called here as this will result in a loader lock.
 		break;
 	case DLL_THREAD_ATTACH:
 		fprintf(file, "DLL thread attach function called.\r\n");
