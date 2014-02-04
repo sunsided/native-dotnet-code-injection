@@ -20,7 +20,7 @@ namespace CodeInject
                 "]" + Environment.NewLine + (String.IsNullOrEmpty(pwzArgument)
                     ? "Not given an argument"
                     : "Given the argument: [" + pwzArgument + "]"));
-            
+
             return 0;
         }
     }

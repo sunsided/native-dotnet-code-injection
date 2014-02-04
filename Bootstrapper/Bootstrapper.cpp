@@ -5,7 +5,10 @@
 #include <stdio.h>
 #include "Bootstrapper.h"
 
+static const LPCSTR logPath = "d:\\dev\\temp2.txt";
+
 static const LPCWSTR assemblyPath = L"D:\\dev\\Projekte\\various\\Code Injection\\CodeInject\\bin\\Release\\CodeInject.exe";
+
 static const LPCWSTR classFqn = L"CodeInject.SomeClass";
 static const LPCWSTR methodName = L"SomeMethod";
 static const LPCWSTR parameter = L"MyParameter";
@@ -17,7 +20,7 @@ static const LPCWSTR parameter = L"MyParameter";
 HRESULT StartTheDotNetRuntime(_In_ LPCTSTR lpCommand)
 {
 	FILE *file;
-	fopen_s(&file, "d:\\dev\\temp2.txt", "a+");
+	fopen_s(&file, logPath, "a+");
 
 	fprintf(file, "binding runtime.\r\n");
 	fflush(file);
