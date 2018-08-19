@@ -7,9 +7,9 @@ namespace CodeInject
     public static class SomeClass
     {
         /// <summary>
-        /// Somes the method.
+        /// Performs some action.
         /// </summary>
-        /// <param name="pwzArgument">The argument.</param>
+        /// <param name="pwzArgument">Some argument.</param>
         /// <returns>System.Int32.</returns>
         /// <remarks>http://www.codingthewheel.com/archives/how-to-inject-a-managed-assembly-dll/</remarks>
         public static int SomeMethod(String pwzArgument)
