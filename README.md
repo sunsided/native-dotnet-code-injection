@@ -1,5 +1,5 @@
-native-dotnet-code-injection
-============================
+Native/.NET code injection
+==========================
 
 Injection of managed code into non-managed Windows applications.
 
